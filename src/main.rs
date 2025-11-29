@@ -25,10 +25,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
-            .service(
-                web::resource("/habits")
-                    .route(web::get().to(routes::habits::placeholder))
-            )
+            .service(routes::habits::get_habits)
+            .service(routes::habits::create_habit)
     })
         .bind(("127.0.0.1", 3000)) ?
         .run()

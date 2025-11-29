@@ -1,9 +1,20 @@
-use actix_web::{get, post, web, HttpResponse};
-use crate::models::habit::NewHabit;
+use actix_web::{get, post, web, HttpResponse, Responder};
+use crate::models::habit::{NewHabit, Habit};
 use sqlx::{Pool, Sqlite};
 
-pub async fn placeholder() -> HttpResponse {
-    HttpResponse::Ok().body("API is working")
+#[get("/habits")]
+pub async fn get_habits(pool: web::Data<Pool<Sqlite>>) -> impl Responder {
+    let habits = sqlx::query_as::<_, Habit>("SELECT id, description FROM habits")
+        .fetch_all(pool.get_ref())
+        .await;
+
+    match habits {
+        Ok(list) => HttpResponse::Ok().json(list),
+        Err(e) => {
+            eprintln!("DB error: {:?}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
 }
 
 #[post("/habits")]
