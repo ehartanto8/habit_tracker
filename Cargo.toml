@@ -1,0 +1,11 @@
+[package]
+name = "habit_tracker"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde = { version = "1.0.228", features = ["derive"] }
+actix-web = "4.12.1"
+sqlx = { version = "0.7", features = ["sqlite", "runtime-tokio-native-tls", "macros"]}
+dotenvy = "0.15"
+
